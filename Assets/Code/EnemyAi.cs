@@ -33,6 +33,16 @@ public class EnemyAi : MonoBehaviour
     public float sightRange, attackRange;
     public bool playerInSightRange, playerInAttackRange;
 
+    //Shooting of the player
+    public GameObject enemyBullet;
+
+    //where the bullet spawns
+    public Transform spawnPoint;
+
+    //How fast the bullet travels
+    public float enemySpeed;
+
+
     private void Awake()
     {
         player = GameObject.Find("PlayerCapsule").transform;
@@ -55,7 +65,10 @@ public class EnemyAi : MonoBehaviour
     /// </summary>
     private void Patroling()
     {
-        if (!walkPointSet) SearchWalkPoint();
+        if (!walkPointSet)
+        {
+            SearchWalkPoint();
+        }
 
         if (walkPointSet)
         {
@@ -107,15 +120,32 @@ public class EnemyAi : MonoBehaviour
         //Make sure enemy doesn't move
         agent.SetDestination(transform.position);
 
+        //rptate as it attacks
+        Vector3 direction = (player.position - transform.position).normalized;
+        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
 
         if (!alreadyAttacked)
         {
             ///Attack code here
+            ShootAtPlayer();
             ///End of attack code
 
             alreadyAttacked = true;
             Invoke(nameof(ResetAttack), timeBetweenAttacks);
         }
+    }
+
+    /// <summary>
+    /// Shooting at the player
+    /// </summary>
+    private void ShootAtPlayer()
+    {
+        GameObject bulletObj = Instantiate(enemyBullet, spawnPoint.position, spawnPoint.rotation) as GameObject;
+        Rigidbody bulletRig = bulletObj.GetComponent<Rigidbody>();
+        Vector3 direction = (player.position - spawnPoint.position).normalized;
+        bulletRig.AddForce(spawnPoint.forward * enemySpeed, ForceMode.Impulse);
+        Destroy(bulletObj, 5f);
     }
 
     /// <summary>

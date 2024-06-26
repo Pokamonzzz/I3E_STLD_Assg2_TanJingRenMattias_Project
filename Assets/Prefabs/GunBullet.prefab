@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1339971153918061403}
   - component: {fileID: 8043309821660328848}
   - component: {fileID: -9098681239868227970}
+  - component: {fileID: -746762757737832250}
   m_Layer: 0
   m_Name: GunBullet
   m_TagString: Untagged
@@ -100,7 +101,7 @@ SphereCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -133,3 +134,16 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &-746762757737832250
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8410747493696707460}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf70f51fd6eec8d43b49cb0657abc96c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 15

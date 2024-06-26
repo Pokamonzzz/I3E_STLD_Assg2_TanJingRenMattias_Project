@@ -1,3 +1,8 @@
+/*
+ * Author: 
+ * Date: 23 June 2024
+ * Description: 
+ */
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -26,10 +31,6 @@ public class Player : MonoBehaviour
         if (currentHealth <= 0)
         {
             Die();
-        }
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            TakeDamage(20f);
         }
     }
 
