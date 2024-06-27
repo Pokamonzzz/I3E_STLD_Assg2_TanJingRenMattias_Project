@@ -7,19 +7,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using TMPro;
+using StarterAssets;
+using Unity.VisualScripting;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Utilities;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] private float maxHealth;
+    [SerializeField]
+    private float maxHealth = 100f;
 
     public HealthBar healthBar;
 
     public float currentHealth;
 
+    /// <summary>
+    /// The current Interactable of the player
+    /// </summary>
+    Interactable currentInteractable;
+
     private void Start()
     {
         currentHealth = maxHealth;
-
         healthBar.SetSliderMax(maxHealth);
     }
     private void Update()
@@ -51,6 +61,7 @@ public class Player : MonoBehaviour
     public void HealPlayer(float amount)
     {
         currentHealth += amount;
+        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth); // Clamp health to ensure it doesn't exceed maxHealth
         healthBar.SetSlider(currentHealth);
     }
 

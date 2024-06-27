@@ -18,6 +18,10 @@ public class DamageGun : MonoBehaviour
     public float bulletLifetime = 3f; // Lifetime of the bullet in seconds
     public Transform bulletSpawnPoint; // Position where the bullet will spawn
 
+
+    //particle system
+    public ParticleSystem muzzle;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -29,6 +33,7 @@ public class DamageGun : MonoBehaviour
     /// </summary>
     public void Shoot()
     {
+        muzzle.Play();
         // Create a ray starting from the player camera's position and going forward
         Ray gunRay = new Ray(playerCamera.position, playerCamera.forward);
 

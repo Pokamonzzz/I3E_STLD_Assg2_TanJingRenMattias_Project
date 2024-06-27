@@ -18,10 +18,26 @@ public class Gun : MonoBehaviour
 
     private float currentCooldown;
 
+    public AudioManager audioManager;
+
     // Start is called before the first frame update
     void Start()
     {
         currentCooldown = fireCoolDown;
+    }
+
+    private void Awake()
+    {
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+    }
+
+    //sound function
+    public void sound()
+    {
+        if (audioManager != null && audioManager.Gun != null)
+        {
+            audioManager.Effects(audioManager.Gun);
+        }
     }
 
     // Update is called once per frame
@@ -45,6 +61,7 @@ public class Gun : MonoBehaviour
                 if (currentCooldown <= 0f)
                 {
                     onGunShoot?.Invoke();
+                    audioManager.Effects(audioManager.Gun);
                     currentCooldown = fireCoolDown;
                 }
             }

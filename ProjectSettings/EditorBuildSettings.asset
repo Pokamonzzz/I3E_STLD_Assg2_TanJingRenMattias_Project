@@ -11,4 +11,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/ASG2.unity
     guid: e9b7e75164802f44db7f73d818d0d7de
-  m_configObjects: {}
+  - enabled: 1
+    path: Assets/Scenes/TempleLevel.unity
+    guid: c25fea09d3e618f4eab4e2644d7bf1aa
+  m_configObjects:
+    com.unity.input.settings: {fileID: 11400000, guid: 9e7be553448fa2546aea5752021cbcf7,
+      type: 2}

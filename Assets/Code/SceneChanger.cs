@@ -12,9 +12,18 @@ public class SceneChanger : MonoBehaviour
 {
     public int targetscene;
 
-    public void ChangeScnene()
+    public void ChangeScene()
     {
         SceneManager.LoadScene(targetscene);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Player")
+        {
+            //Do scene change
+            ChangeScene();
+        }
     }
 
 
