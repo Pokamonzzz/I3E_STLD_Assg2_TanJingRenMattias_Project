@@ -10,12 +10,32 @@ public class AudioManager : MonoBehaviour
     [SerializeField]
     AudioSource SFX;
 
-    //create a public audioclip for each audio source i wan to use
-    public AudioClip Gun;
+    public static AudioManager instance;
 
-    public void BackGroundMusic(AudioClip bgm)
+
+    //create a public audioclip for each audio source i wan to use
+    public AudioClip BGM;
+    public AudioClip Gun;
+    public AudioClip click;
+    public AudioClip collect;
+
+    private void Awake()
     {
-        Music.clip = bgm;
+        // Ensure only one instance of AudioManager exists
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    public void Start()
+    {
+        Music.clip = BGM;
         Music.loop = true;
         Music.Play();
     }

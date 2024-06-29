@@ -6,6 +6,8 @@ TagManager:
   tags:
   - CinemachineTarget
   - Audio
+  - Bullet
+  - Crate
   layers:
   - Default
   - TransparentFX

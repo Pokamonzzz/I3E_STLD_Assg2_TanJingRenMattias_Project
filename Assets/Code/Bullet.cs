@@ -22,5 +22,9 @@ public class Bullet : MonoBehaviour
             other.GetComponent<Player>().TakeDamage(damage);
             Destroy(gameObject);
         }
+        else if (other.CompareTag("Crate"))
+        {
+            Destroy(gameObject); // Destroy bullet on collision with crate
+        }
     }
 }

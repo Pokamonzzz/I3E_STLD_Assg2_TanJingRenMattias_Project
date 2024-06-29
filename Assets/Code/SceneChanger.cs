@@ -10,32 +10,25 @@ using UnityEngine.SceneManagement;
 
 public class SceneChanger : MonoBehaviour
 {
-    public int targetscene;
-
-    public void ChangeScene()
-    {
-        SceneManager.LoadScene(targetscene);
-    }
+    public int targetSceneIndex; // Index of the TempleLevel scene in the build settings
+    public Transform spawnPointTempleLevel; // Reference to the spawn point in the TempleLevel scene
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Player")
+        if (other.CompareTag("Player"))
         {
-            //Do scene change
-            ChangeScene();
+            // Teleport to TempleLevel scene
+            TeleportToTempleLevel();
         }
     }
 
-
-    // Start is called before the first frame update
-    void Start()
+    private void TeleportToTempleLevel()
     {
-        
-    }
+        // Set spawn index or position if needed before loading scene
+        SpawnManager.instance.SetSpawnIndexTempleLevel(0); // Example: Set spawn index if using SpawnManager
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        // Load the TempleLevel scene
+        SceneManager.LoadScene(targetSceneIndex);
     }
 }
+
