@@ -8,6 +8,7 @@ TagManager:
   - Audio
   - Bullet
   - Crate
+  - Playerdum
   layers:
   - Default
   - TransparentFX

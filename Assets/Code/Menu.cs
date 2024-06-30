@@ -10,6 +10,7 @@ public class Menu : MonoBehaviour
 
     public Canvas canvasToPersist;
     private PlayerSpawner playerSpawner;
+    private Player player;
 
     private void Start()
     {
@@ -44,6 +45,14 @@ public class Menu : MonoBehaviour
             GameManager.instance.SetPersistentCanvas(canvasToPersist);
         }
         GameManager.instance.DestroyOnScene("StartMenu");
+        if (scene.name == "ASG2")
+        {
+            Player player = FindObjectOfType<Player>();
+            if (player != null)
+            {
+                player.InitializePlayer();
+            }
+        }
     }
 
     public void PauseMenu()
@@ -89,22 +98,16 @@ public class Menu : MonoBehaviour
     public void Restart()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-
-        Time.timeScale = 1;
+        Cursor.lockState= CursorLockMode.Locked;
         pauseMenu?.SetActive(false);
+        Time.timeScale = 1;
+        player.InitializePlayer();
+        player.Die();
 
         // Play click sound effect
         if (AudioManager.instance != null)
         {
             AudioManager.instance.Effects(AudioManager.instance.click);
-        }
-        if (playerSpawner != null)
-        {
-            playerSpawner.RespawnPlayerAtInitialSpawn(); // Move this here to ensure it's called after the scene is loaded
-        }
-        else
-        {
-            Debug.LogWarning("Player spawner not found for respawning.");
         }
     }
 
@@ -112,6 +115,8 @@ public class Menu : MonoBehaviour
     {
         GameManager.instance.ClearPersistentCanvas();
         SceneManager.LoadScene("StartMenu");
+        Cursor.lockState = CursorLockMode.None;
+        Time.timeScale = 1;
         // Play click sound effect
         if (AudioManager.instance != null)
         {

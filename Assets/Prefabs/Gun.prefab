@@ -8572,8 +8572,20 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  fireCoolDown: 0.25
-  automatic: 0
+      - m_Target: {fileID: 3346977348197749510}
+        m_TargetAssemblyTypeName: Gun, Assembly-CSharp
+        m_MethodName: sound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  fireCoolDown: 0.2
+  automatic: 1
   audioManager: {fileID: 0}
 --- !u!114 &8423359632068218959
 MonoBehaviour:

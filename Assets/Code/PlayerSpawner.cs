@@ -8,8 +8,8 @@ public class PlayerSpawner : MonoBehaviour
     private Vector3 initialSpawnPosition;
     private Quaternion initialSpawnRotation;
 
-    private void Start()
-    {
+    private void Awake()
+    {   
         initialSpawnPosition = transform.position;
         initialSpawnRotation = transform.rotation;
         // Check if there are saved spawn positions
@@ -57,7 +57,6 @@ public class PlayerSpawner : MonoBehaviour
         {
             player.transform.position = initialSpawnPosition;
             player.transform.rotation = initialSpawnRotation;
-            player.InitializePlayer(); // Reset player's health, UI, etc.
             Debug.Log($"Player respawned at initial spawn: {initialSpawnPosition} with rotation: {initialSpawnRotation}.");
         }
         else

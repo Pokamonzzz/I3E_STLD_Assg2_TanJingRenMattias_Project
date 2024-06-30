@@ -10,7 +10,7 @@ public class TeleportToASG2 : MonoBehaviour
     public string targetSceneName = "ASG2"; // Name of the ASG2 scene
     public Button teleportButton; // Reference to the UI button for teleportation
 
-    public Vector3 spawnPosition; // Specific location in TempleLevel scene
+    public Vector3 spawnPosition; // Specific location in ASG2 scene
     public Vector3 spawnDirection; // Specific Direction in ASG2 scene
 
     private void Start()

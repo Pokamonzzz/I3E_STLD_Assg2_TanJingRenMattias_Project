@@ -12,6 +12,7 @@ public class Interactable : MonoBehaviour
     public virtual void Interacted(Player player)
     {
         Debug.Log($"{gameObject.name} interacted by {player.gameObject.name}");
+        AudioManager.instance?.Effects(AudioManager.instance.collect);
     }
 
 }

@@ -12,6 +12,8 @@ using StarterAssets;
 using Unity.VisualScripting;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Utilities;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -30,28 +32,40 @@ public class Player : MonoBehaviour
 
     [SerializeField]
     Transform playerCamera;
-
     [SerializeField]
     float interactionDistance;
-
     [SerializeField]
     TextMeshProUGUI interactionText;
+    [SerializeField]
+    public Transform respawnPoint;
+    [SerializeField]
+    private Transform player;
+    [SerializeField]
+    private Canvas gameOverCanvas; // Reference to the Game Over Canvas
+    [SerializeField]
+    private Button restartButton; // Reference to the Restart Button
+    [SerializeField]
+    private Button quitButton; // Reference to the Quit Button
 
     public Menu menu;
 
-    private static bool playerExists;
+    private static Player instance;
 
     private void Awake()
     {
-        if (!playerExists)
+        if (instance == null)
         {
-            playerExists = true;
-            DontDestroyOnLoad(this.gameObject);
+            instance = this;
+            DontDestroyOnLoad(gameObject);
             DontDestroyOnLoad(interactionText.gameObject); // Ensure interaction text is not destroyed
         }
         else
         {
-            Destroy(gameObject);
+            if (instance != this)
+            {
+                Destroy(gameObject);
+                return;
+            }
         }
     }
 
@@ -62,7 +76,6 @@ public class Player : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-
     }
     private void Update()
     {
@@ -126,6 +139,7 @@ public class Player : MonoBehaviour
     {
         currentHealth -= amount;
         healthBar.SetSlider(currentHealth);
+
     }
 
     /// <summary>
@@ -142,8 +156,23 @@ public class Player : MonoBehaviour
     /// <summary>
     /// u die lor
     /// </summary>
-    private void Die()
+    public void Die()
     {
         Debug.Log("you died");
+        player.transform.position = respawnPoint.transform.position;
+        gameOverCanvas.gameObject.SetActive(true);
     }
+
+    private void OnTriggerEnter(Collider collision)
+    {
+        if (collision.tag == "ASG2")
+        {
+            SceneManager.LoadScene(1);
+        }
+        else if (collision.tag == "TempleLevel")
+        {
+            SceneManager.LoadScene(0);
+        }
+    }
+
 }

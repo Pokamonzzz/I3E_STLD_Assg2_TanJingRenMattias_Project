@@ -44,7 +44,6 @@ public class DamageGun : MonoBehaviour
             if (hitInfo.collider.gameObject.TryGetComponent(out Entity enemy))
             {
 
-                Debug.Log(enemy.Health);
                 // Apply damage to the enemy
                 enemy.Health -= damage;
 
