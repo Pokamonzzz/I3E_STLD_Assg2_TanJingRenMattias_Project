@@ -176,6 +176,7 @@ public class Player : MonoBehaviour
         Debug.Log("Player has died.");
         player.transform.position = respawnPoint.transform.position; // Respawn player at respawn point
         gameOverCanvas.gameObject.SetActive(true); // Activate game over canvas
+        Cursor.lockState = CursorLockMode.None;
     }
 
     /// <summary>
