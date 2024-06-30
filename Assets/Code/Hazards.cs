@@ -1,30 +1,38 @@
 /*
- * Author: 
+ * Author: Tan Jing Ren Mattias
  * Date: 27 June 2024
- * Description: 
+ * Description: Manages hazards that cause damage to the player on collision or trigger enter/exit.
  */
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Hazards : MonoBehaviour
-{   
-    // Damage on initial collision
+{
+    /// <summary>
+    /// Damage inflicted on initial collision.
+    /// </summary>
     public float initialDamage = 10f;
 
-    // Continuous damage per second
-    public float continuousDamage = 5f; 
-
-    // Damage interval in seconds
-    public float damageInterval = 1f; 
-    
-    // Timer for continuous damage
-    private float damageTimer; 
+    /// <summary>
+    /// Continuous damage per second while player is in contact.
+    /// </summary>
+    public float continuousDamage = 5f;
 
     /// <summary>
-    /// Collision with the player
+    /// Interval between each instance of continuous damage.
     /// </summary>
-    /// <param name="collision"></param>
+    public float damageInterval = 1f;
+
+    /// <summary>
+    /// Timer for continuous damage intervals.
+    /// </summary>
+    private float damageTimer;
+
+    /// <summary>
+    /// Handles collision events with the player.
+    /// </summary>
+    /// <param name="collision">The collision data.</param>
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Player"))
@@ -38,9 +46,9 @@ public class Hazards : MonoBehaviour
     }
 
     /// <summary>
-    /// Collision with the player like hitting a fence
+    /// Handles continuous collision events with the player.
     /// </summary>
-    /// <param name="collision"></param>
+    /// <param name="collision">The collision data.</param>
     private void OnCollisionStay(Collision collision)
     {
         if (collision.gameObject.CompareTag("Player"))
@@ -54,10 +62,11 @@ public class Hazards : MonoBehaviour
             }
         }
     }
+
     /// <summary>
-    /// when in lava u need to be in so ontriggerEnter
+    /// Handles trigger events when the player enters the hazard area.
     /// </summary>
-    /// <param name="other"></param>
+    /// <param name="other">The collider of the other object.</param>
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
@@ -69,10 +78,11 @@ public class Hazards : MonoBehaviour
             damageTimer = damageInterval;
         }
     }
+
     /// <summary>
-    /// Same thing like in lava
+    /// Handles continuous trigger events while the player is in the hazard area.
     /// </summary>
-    /// <param name="other"></param>
+    /// <param name="other">The collider of the other object.</param>
     private void OnTriggerStay(Collider other)
     {
         if (other.CompareTag("Player"))
@@ -85,16 +95,5 @@ public class Hazards : MonoBehaviour
                 damageTimer = damageInterval; // Reset the timer
             }
         }
-    }
-        // Start is called before the first frame update
-        void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

@@ -1,3 +1,8 @@
+/*
+ * Author: Tan Jing Ren Mattias
+ * Date: 30 June 2024
+ * Description: Handles teleportation functionality and saves spawn positions.
+ */
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,11 +12,25 @@ using UnityEngine.UI;
 
 public class TeleportToASG2 : MonoBehaviour
 {
-    public string targetSceneName = "ASG2"; // Name of the ASG2 scene
-    public Button teleportButton; // Reference to the UI button for teleportation
+    /// <summary>
+    /// Name of the target scene to teleport to (default: "ASG2").
+    /// </summary>
+    public string targetSceneName = "ASG2";
 
-    public Vector3 spawnPosition; // Specific location in ASG2 scene
-    public Vector3 spawnDirection; // Specific Direction in ASG2 scene
+    /// <summary>
+    /// Reference to the UI button used for teleportation.
+    /// </summary>
+    public Button teleportButton;
+
+    /// <summary>
+    /// Specific spawn position in the ASG2 scene.
+    /// </summary>
+    public Vector3 spawnPosition;
+
+    /// <summary>
+    /// Specific spawn direction in the ASG2 scene.
+    /// </summary>
+    public Vector3 spawnDirection;
 
     private void Start()
     {
@@ -23,15 +42,22 @@ public class TeleportToASG2 : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Teleports the player to the ASG2 scene.
+    /// </summary>
     private void TeleportPlayer()
     {
-        // Save the spawn position for ASG2 scene
+        // Save the spawn position and direction for ASG2 scene
         SaveSpawnPositionAndDirection();
 
         // Load ASG2 scene
         SceneManager.LoadScene(targetSceneName);
     }
 
+    /// <summary>
+    /// Saves the spawn position and direction for the TempleLevel scene when the player enters the trigger.
+    /// </summary>
+    /// <param name="other">The collider triggering the event.</param>
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
@@ -45,6 +71,10 @@ public class TeleportToASG2 : MonoBehaviour
             SceneManager.LoadScene(targetSceneName);
         }
     }
+
+    /// <summary>
+    /// Saves the spawn position and direction for the ASG2 scene.
+    /// </summary>
     private void SaveSpawnPositionAndDirection()
     {
         PlayerPrefs.SetFloat("SpawnX", spawnPosition.x);

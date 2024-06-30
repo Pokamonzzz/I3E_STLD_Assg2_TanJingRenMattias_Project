@@ -1,16 +1,39 @@
+/*
+ * Author: Tan Jing Ren Mattias
+ * Date: 27 June 2024
+ * Description: Crates in the game that spawns items when destroyed.
+ */
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Manages the behavior of crates in the game, including spawning collectibles and showing the win UI.
+/// </summary>
 public class Crates : MonoBehaviour
 {
+    /// <summary>
+    /// The collectible prefab to spawn.
+    /// </summary>
     [SerializeField]
-    private GameObject spawn; // The collectible prefab to spawn
+    private GameObject spawn;
+
+    /// <summary>
+    /// The specific spawn point for the collectible.
+    /// </summary>
     [SerializeField]
-    private Transform spawnPoint; // The specific spawn point for the collectible
+    private Transform spawnPoint;
+
+    /// <summary>
+    /// Reference to the UI element to show when the collectible spawns.
+    /// </summary>
     [SerializeField]
     private GameObject winUI; // Reference to the UI element to show when the crystal spawns
 
+    /// <summary>
+    /// Handles collisions with other game objects.
+    /// </summary>
+    /// <param name="other">The collider of the object that enters the trigger.</param>
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Bullet"))
@@ -25,6 +48,9 @@ public class Crates : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Spawns the collectible and shows the win UI element.
+    /// </summary>
     void SpawnCollectible()
     {
         if (spawnPoint != null)

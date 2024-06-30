@@ -1,7 +1,7 @@
 /*
- * Author: 
+ * Author: Tan Jing Ren Mattias
  * Date: 23 June 2024
- * Description: 
+ * Description: Controls player health, interaction, and game over functionality
  */
 using System.Collections;
 using System.Collections.Generic;
@@ -17,40 +17,32 @@ using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
-
     [SerializeField]
     private float maxHealth = 100f;
-
     public HealthBar healthBar;
-
     public float currentHealth;
 
     /// <summary>
-    /// The current Interactable of the player
+    /// The current Interactable object the player can interact with.
     /// </summary>
     Interactable currentInteractable;
 
-    [SerializeField]
-    Transform playerCamera;
-    [SerializeField]
-    float interactionDistance;
-    [SerializeField]
-    TextMeshProUGUI interactionText;
-    [SerializeField]
-    public Transform respawnPoint;
-    [SerializeField]
-    private Transform player;
-    [SerializeField]
-    private Canvas gameOverCanvas; // Reference to the Game Over Canvas
-    [SerializeField]
-    private Button restartButton; // Reference to the Restart Button
-    [SerializeField]
-    private Button quitButton; // Reference to the Quit Button
+    [SerializeField] Transform playerCamera;
+    [SerializeField] float interactionDistance;
+    [SerializeField] TextMeshProUGUI interactionText;
+    [SerializeField] Transform respawnPoint;
+    [SerializeField] Transform player;
+    [SerializeField] Canvas gameOverCanvas; // Reference to the Game Over Canvas
+    [SerializeField] Button restartButton; // Reference to the Restart Button
+    [SerializeField] Button quitButton; // Reference to the Quit Button
 
     public Menu menu;
 
     private static Player instance;
 
+    /// <summary>
+    /// Don tdestroy the player
+    /// </summary>
     private void Awake()
     {
         if (instance == null)
@@ -69,6 +61,7 @@ public class Player : MonoBehaviour
         }
     }
 
+    // Start is called before the first frame update
     private void Start()
     {
         currentHealth = maxHealth;
@@ -77,6 +70,8 @@ public class Player : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
+
+    // Update is called once per frame
     private void Update()
     {
         if (currentHealth > maxHealth)
@@ -88,15 +83,14 @@ public class Player : MonoBehaviour
             Die();
         }
 
-        // Raycast for player
+        // Raycast to detect interactable objects
         Debug.DrawLine(playerCamera.position, playerCamera.position + (playerCamera.forward * interactionDistance), Color.red);
         RaycastHit hitInfo;
         if (Physics.Raycast(playerCamera.position, playerCamera.forward, out hitInfo, interactionDistance))
         {
-            // print out the name of whatever my ray hit
             if (hitInfo.transform.TryGetComponent<Interactable>(out currentInteractable))
             {
-                //Display some interation text
+                // Display interaction text
                 interactionText.gameObject.SetActive(true);
             }
             else
@@ -110,42 +104,63 @@ public class Player : MonoBehaviour
             currentInteractable = null;
             interactionText.gameObject.SetActive(false);
         }
+
+        // Handle interaction input
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            OnInteract();
+        }
+
+        // Handle pause input
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            OnPause();
+        }
     }
 
-    void OnInteract()
+    /// <summary>
+    /// Called when player interacts with an interactable object.
+    /// </summary>
+    private void OnInteract()
     {
         if (currentInteractable != null)
         {
             currentInteractable.Interacted(this);
         }
     }
-    void OnPause()
+
+    /// <summary>
+    /// Opens the pause menu.
+    /// </summary>
+    private void OnPause()
     {
         menu.PauseMenu();
     }
 
+    /// <summary>
+    /// Initializes the player state.
+    /// </summary>
     public void InitializePlayer()
     {
         currentHealth = maxHealth; // Reset health to maximum
         healthBar.SetSlider(currentHealth); // Update health UI
-        Debug.Log("everything resetted");
+        Debug.Log("Player initialized.");
     }
 
     /// <summary>
-    /// Amount of damage taken when hit
+    /// Applies damage to the player.
     /// </summary>
-    /// <param name="amount"></param>
+    /// <param name="amount">Amount of damage to apply.</param>
     public void TakeDamage(float amount)
     {
         currentHealth -= amount;
         healthBar.SetSlider(currentHealth);
-
     }
 
     /// <summary>
-    /// Amount of health to heal the player
+    /// Heals the player.
     /// </summary>
-    /// <param name="amount"></param>
+    /// <param name="amount">Amount of health to restore.</param>
     public void HealPlayer(float amount)
     {
         currentHealth += amount;
@@ -154,25 +169,29 @@ public class Player : MonoBehaviour
     }
 
     /// <summary>
-    /// u die lor
+    /// Handles player death.
     /// </summary>
     public void Die()
     {
-        Debug.Log("you died");
-        player.transform.position = respawnPoint.transform.position;
-        gameOverCanvas.gameObject.SetActive(true);
+        Debug.Log("Player has died.");
+        player.transform.position = respawnPoint.transform.position; // Respawn player at respawn point
+        gameOverCanvas.gameObject.SetActive(true); // Activate game over canvas
     }
 
+    /// <summary>
+    /// Handles trigger collisions.
+    /// </summary>
+    /// <param name="collision">Collider involved in the collision.</param>
     private void OnTriggerEnter(Collider collision)
     {
+        // Change scene based on trigger tags
         if (collision.tag == "ASG2")
         {
-            SceneManager.LoadScene(1);
+            SceneManager.LoadScene(1); // Load ASG2 scene
         }
         else if (collision.tag == "TempleLevel")
         {
-            SceneManager.LoadScene(0);
+            SceneManager.LoadScene(0); // Load TempleLevel scene
         }
     }
-
 }

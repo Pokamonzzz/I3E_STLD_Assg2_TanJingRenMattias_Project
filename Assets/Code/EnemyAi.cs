@@ -1,7 +1,7 @@
 /*
- * Author: 
+ * Author: Tan Jing Ren, Mattias
  * Date: 26 June 2024
- * Description: 
+ * Description:  Manages enemy AI behavior including patrolling, chasing, attacking the player, and taking damage.
  */
 using System.Collections;
 using System.Collections.Generic;
@@ -11,48 +11,87 @@ using UnityEngine.ProBuilder;
 
 public class EnemyAi : MonoBehaviour
 {
+    /// <summary>
+    /// The NavMeshAgent component attached to the enemy.
+    /// </summary>
     public NavMeshAgent agent;
 
+    /// <summary>
+    /// The player's transform.
+    /// </summary>
     public Transform player;
 
+    /// <summary>
+    /// Layers considered as ground and player.
+    /// </summary>
     public LayerMask whatIsGround, whatIsPlayer;
 
+    /// <summary>
+    /// The health of the enemy.
+    /// </summary>
     public float health;
 
-
-    //Patrolling
+    // Patrolling
+    /// <summary>
+    /// The point to walk to during patrolling.
+    /// </summary>
     public Vector3 walkPoint;
-    bool walkPointSet;
+    private bool walkPointSet;
+    /// <summary>
+    /// The range within which the walk point is set.
+    /// </summary>
     public float walkPointRange;
 
-    //Attacking
+    // Attacking
+    /// <summary>
+    /// The time between attacks.
+    /// </summary>
     public float timeBetweenAttacks;
-    bool alreadyAttacked;
+    private bool alreadyAttacked;
 
-    //States of the AI
-    public float sightRange, attackRange;
+    // States of the AI
+    /// <summary>
+    /// The sight range of the enemy.
+    /// </summary>
+    public float sightRange;
+
+    /// <summary>
+    /// The attack range of the enemy.
+    /// </summary>
+    public float attackRange;
     public bool playerInSightRange, playerInAttackRange;
 
-    //Shooting of the player
+    // Shooting
+    /// <summary>
+    /// The bullet prefab to shoot at the player.
+    /// </summary>
     public GameObject enemyBullet;
 
-    //where the bullet spawns
+    /// <summary>
+    /// The point from which the bullet is spawned.
+    /// </summary>
     public Transform spawnPoint;
 
-    //How fast the bullet travels
+    /// <summary>
+    /// The speed at which the bullet travels.
+    /// </summary>
     public float enemySpeed;
 
-
+    /// <summary>
+    /// Initializes the enemy AI, setting the player and NavMeshAgent references.
+    /// </summary>
     private void Awake()
     {
         player = GameObject.Find("PlayerCapsule").transform;
         agent = GetComponent<NavMeshAgent>();
     }
 
-    // Update is called once per frame
+    /// <summary>
+    /// Called once per frame to update the enemy's behavior.
+    /// </summary>
     void Update()
     {
-        //check if player is in sight and attack range
+        // Check if player is in sight and attack range
         playerInSightRange = Physics.CheckSphere(transform.position, sightRange, whatIsPlayer);
         playerInAttackRange = Physics.CheckSphere(transform.position, attackRange, whatIsPlayer);
 
@@ -60,8 +99,9 @@ public class EnemyAi : MonoBehaviour
         if (playerInSightRange && !playerInAttackRange) ChasePlayer();
         if (playerInAttackRange && playerInSightRange) AttackPlayer();
     }
+
     /// <summary>
-    /// patrolling enemy
+    /// Handles the patrolling behavior of the enemy.
     /// </summary>
     private void Patroling()
     {
@@ -69,7 +109,7 @@ public class EnemyAi : MonoBehaviour
         {
             SearchWalkPoint();
         }
-
+        // walkpoints
         if (walkPointSet)
         {
             agent.SetDestination(walkPoint);
@@ -77,21 +117,19 @@ public class EnemyAi : MonoBehaviour
 
         Vector3 distanceToWalkPoint = transform.position - walkPoint;
 
-        //Walkpoint reached
+        // Walk point reached
         if (distanceToWalkPoint.magnitude < 1f)
         {
             walkPointSet = false;
         }
-
-
     }
 
     /// <summary>
-    /// finding areas that it can walk on the layer
+    /// Searches for a walk point within the specified range.
     /// </summary>
     private void SearchWalkPoint()
     {
-        //Calculate random point in range
+        // Calculate random point in range
         float randomZ = Random.Range(-walkPointRange, walkPointRange);
         float randomX = Random.Range(-walkPointRange, walkPointRange);
 
@@ -102,8 +140,9 @@ public class EnemyAi : MonoBehaviour
             walkPointSet = true;
         }
     }
+
     /// <summary>
-    /// Chasing the player by going to their location
+    /// Chases the player by setting the agent's destination to the player's position.
     /// </summary>
     private void ChasePlayer()
     {
@@ -111,25 +150,23 @@ public class EnemyAi : MonoBehaviour
     }
 
     /// <summary>
-    /// Attacks the player stops to attack
+    /// Handles the attack behavior of the enemy.
     /// </summary>
     private void AttackPlayer()
     {
-        // shooting the bullet
-
-        //Make sure enemy doesn't move
+        // Make sure enemy doesn't move
         agent.SetDestination(transform.position);
 
-        //rotate as it attacks
+        // Rotate as it attacks
         Vector3 direction = (player.position - transform.position).normalized;
         Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
 
         if (!alreadyAttacked)
         {
-            ///Attack code here
+            // Attack code here
             ShootAtPlayer();
-            ///End of attack code
+            // End of attack code
 
             alreadyAttacked = true;
             Invoke(nameof(ResetAttack), timeBetweenAttacks);
@@ -137,7 +174,7 @@ public class EnemyAi : MonoBehaviour
     }
 
     /// <summary>
-    /// Shooting at the player
+    /// Shoots a bullet at the player.
     /// </summary>
     private void ShootAtPlayer()
     {
@@ -149,7 +186,7 @@ public class EnemyAi : MonoBehaviour
     }
 
     /// <summary>
-    /// the time between attacks
+    /// Resets the attack status to allow for the next attack./time between attacks
     /// </summary>
     private void ResetAttack()
     {
@@ -157,17 +194,18 @@ public class EnemyAi : MonoBehaviour
     }
 
     /// <summary>
-    /// damage dealt from enemy
+    /// Applies damage to the enemy.
     /// </summary>
-    /// <param name="damage"></param>
+    /// <param name="damage">The amount of damage to apply.</param>
     public void TakeDamage(int damage)
     {
         health -= damage;
 
         if (health <= 0) Invoke(nameof(DestroyEnemy), 0.5f);
     }
+
     /// <summary>
-    /// when enemy die they destory themself
+    /// Destroys the enemy game object.
     /// </summary>
     private void DestroyEnemy()
     {

@@ -1,7 +1,7 @@
 /*
- * Author: 
+ * Author: Tan Jing Ren Mattias
  * Date: 23 June 2024
- * Description: 
+ * Description: Manages gun shooting mechanics, including semi-automatic and automatic firing modes, cooldown management, and sound effects.
  */
 using System.Collections;
 using System.Collections.Generic;
@@ -10,29 +10,51 @@ using UnityEngine.Events;
 
 public class Gun : MonoBehaviour
 {
+    /// <summary>
+    /// Event invoked when the gun shoots.
+    /// </summary>
     public UnityEvent onGunShoot;
+
+    /// <summary>
+    /// Cooldown time between shots.
+    /// </summary>
     public float fireCoolDown;
 
-    // change the gun shooting either to semi or auto (deafult = auto)
+    /// <summary>
+    /// Determines if the gun is automatic. Default is automatic.
+    /// </summary>
     public bool automatic;
 
+    /// <summary>
+    /// Current cooldown time.
+    /// </summary>
     private float currentCooldown;
 
+    /// <summary>
+    /// Reference to the AudioManager for playing sound effects.
+    /// </summary>
     public AudioManager audioManager;
 
-    // Start is called before the first frame update
+    /// <summary>
+    /// Initializes the gun's cooldown time.
+    /// </summary>
     void Start()
     {
         currentCooldown = fireCoolDown;
     }
 
+    /// <summary>
+    /// Finds the AudioManager in the scene.
+    /// </summary>
     private void Awake()
     {
         audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
     }
 
-    //sound function
-    public void sound()
+    /// <summary>
+    /// Plays the gun shot sound effect.
+    /// </summary>
+    public void Sound()
     {
         if (audioManager != null && audioManager.Gun != null)
         {
@@ -40,7 +62,9 @@ public class Gun : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
+    /// <summary>
+    /// Handles the gun shooting mechanics based on the firing mode.
+    /// </summary>
     void Update()
     {
         if (automatic)

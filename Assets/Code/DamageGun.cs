@@ -1,7 +1,7 @@
 /*
- * Author: 
+ * Author: Tan Jing Ren Mattias
  * Date: 23 June 2024
- * Description: 
+ * Description: Manages the behavior of the damage gun, shoot and kill and destory bullets
  */
 using System.Collections;
 using System.Collections.Generic;
@@ -9,31 +9,61 @@ using UnityEngine;
 
 public class DamageGun : MonoBehaviour
 {
+    /// <summary>
+    /// The damage the gun will inflict.
+    /// </summary>
     public float damage;
+
+    /// <summary>
+    /// The range of the bullet.
+    /// </summary>
     public float bulletRange;
+
+    /// <summary>
+    /// Reference to the player's camera.
+    /// </summary>
     private Transform playerCamera;
 
-    public GameObject bulletPrefab; // Reference to the bullet prefab
-    public float bulletSpeed = 20f; // Speed of the bullet
-    public float bulletLifetime = 3f; // Lifetime of the bullet in seconds
-    public Transform bulletSpawnPoint; // Position where the bullet will spawn
+    /// <summary>
+    /// Reference to the bullet prefab.
+    /// </summary>
+    public GameObject bulletPrefab;
 
+    /// <summary>
+    /// Speed of the bullet.
+    /// </summary>
+    public float bulletSpeed = 20f;
 
-    //particle system
+    /// <summary>
+    /// Lifetime of the bullet in seconds.
+    /// </summary>
+    public float bulletLifetime = 3f;
+
+    /// <summary>
+    /// Position where the bullet will spawn.
+    /// </summary>
+    public Transform bulletSpawnPoint;
+
+    /// <summary>
+    /// The muzzle particle system for shooting effects.
+    /// </summary>
     public ParticleSystem muzzle;
 
-    // Start is called before the first frame update
+    /// <summary>
+    /// Initializes the gun, setting the player's camera reference.
+    /// </summary>
     void Start()
     {
         playerCamera = Camera.main.transform;
     }
 
     /// <summary>
-    /// Uses raycast to find the enemy type then applies damage on hit
+    /// Uses raycast to find the enemy type then applies damage on hit.
     /// </summary>
     public void Shoot()
     {
         muzzle.Play();
+
         // Create a ray starting from the player camera's position and going forward
         Ray gunRay = new Ray(playerCamera.position, playerCamera.forward);
 
@@ -43,7 +73,6 @@ public class DamageGun : MonoBehaviour
             // Check if the hit object has an Entity component (enemy)
             if (hitInfo.collider.gameObject.TryGetComponent(out Entity enemy))
             {
-
                 // Apply damage to the enemy
                 enemy.Health -= damage;
 
@@ -63,6 +92,9 @@ public class DamageGun : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Instantiates and destroys the bullet.
+    /// </summary>
     void DestroyBullet()
     {
         // Instantiate the bullet prefab at the bulletSpawnPoint position and rotation
